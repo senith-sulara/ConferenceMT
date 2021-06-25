@@ -114,43 +114,6 @@ exports.getAll = (req, res, next) => {
   });
 };
 
-// exports.searchPages = (req, res, next) => {
-//   let search = req.params.search;
-//   let query = { name: new RegExp(search, "i") };
-//   console.log(query);
-//   page.find(query, (err, result) => {
-//     if (err) {
-//       return next(err);
-//     }
-
-//     data = {
-//       status: "success",
-//       code: 200,
-//       data: result,
-//     };
-//     res.json(data);
-//   });
-// };
-
-// exports.getByTitle = (req, res, next) => {
-//   let query = { title: req.params.title };
-
-//   Product.find(query, (err, result) => {
-//     if (err) {
-//       return next(err);
-//     }
-
-//     data = {
-//       status: "success",
-//       code: 200,
-//       data: result,
-//     };
-
-//     res.json(data);
-//   });
-// };
-
-
 exports.getPageById = (req, res, next) => {
   page.findOne({ _id: req.params.id }, (err, result) => {
     if (err) {
