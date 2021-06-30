@@ -49736,44 +49736,56 @@ const Reviwer = ()=>{
             lineNumber: 68
         },
         __self: undefined
+    }, "Status"), /*#__PURE__*/ _reactDefault.default.createElement("th", {
+        __source: {
+            fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
+            lineNumber: 69
+        },
+        __self: undefined
     }, "Approval"))), /*#__PURE__*/ _reactDefault.default.createElement("tbody", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-            lineNumber: 71
+            lineNumber: 72
         },
         __self: undefined
-    }, filesList.length > 0 ? filesList.map(({ _id , title , description , author , file_path , file_mimetype  })=>/*#__PURE__*/ _reactDefault.default.createElement("tr", {
+    }, filesList.length > 0 ? filesList.map(({ _id , title , description , author , approval , file_path , file_mimetype  })=>{
+        var app;
+        if (approval !== undefined) {
+            if (approval) app = "Approved";
+            else app = "Rejected";
+        } else app = "Pending";
+        return(/*#__PURE__*/ _reactDefault.default.createElement("tr", {
             key: _id,
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 75
+                lineNumber: 85
             },
             __self: undefined
         }, /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-title",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 76
+                lineNumber: 86
             },
             __self: undefined
         }, title), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-description",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 77
+                lineNumber: 87
             },
             __self: undefined
         }, description), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-author",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 78
+                lineNumber: 88
             },
             __self: undefined
         }, author), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 79
+                lineNumber: 89
             },
             __self: undefined
         }, /*#__PURE__*/ _reactDefault.default.createElement("a", {
@@ -49782,14 +49794,21 @@ const Reviwer = ()=>{
             ,
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 80
+                lineNumber: 90
             },
             __self: undefined
         }, "Download")), /*#__PURE__*/ _reactDefault.default.createElement("td", {
+            className: "file-approval",
+            __source: {
+                fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
+                lineNumber: 99
+            },
+            __self: undefined
+        }, app), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             colSpan: "2",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 89
+                lineNumber: 100
             },
             __self: undefined
         }, /*#__PURE__*/ _reactDefault.default.createElement("a", {
@@ -49798,7 +49817,7 @@ const Reviwer = ()=>{
             ,
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 90
+                lineNumber: 101
             },
             __self: undefined
         }, "Approve"), /*#__PURE__*/ _reactDefault.default.createElement("a", {
@@ -49807,27 +49826,28 @@ const Reviwer = ()=>{
             ,
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-                lineNumber: 98
+                lineNumber: 109
             },
             __self: undefined
-        }, "Decline")))
-    ) : /*#__PURE__*/ _reactDefault.default.createElement("tr", {
+        }, "Decline"))));
+    }) : /*#__PURE__*/ _reactDefault.default.createElement("tr", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-            lineNumber: 111
+            lineNumber: 123
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("td", {
         colSpan: 3,
         style: {
-            fontWeight: '300'
+            fontWeight: '300',
+            width: "100%"
         },
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\reviwer\\reviwer.js",
-            lineNumber: 112
+            lineNumber: 125
         },
         __self: undefined
-    }, "No files found. Please add some."))))));
+    }, "Loading..."))))));
 };
 _s(Reviwer, "bWuK74Imdf9ceNABcpqHjEj10z8=");
 _c = Reviwer;
@@ -49859,16 +49879,7 @@ var _s = $RefreshSig$();
 const View = (props)=>{
     _s();
     const [filesList, setReviewsList] = _react.useState([]);
-    const [file, setFile] = _react.useState(null); // state for storing actual image
-    const [previewSrc, setPreviewSrc] = _react.useState(''); // state for storing previewImage
-    const [state, setState] = _react.useState({
-        title: '',
-        description: '',
-        author: ''
-    });
     const [errorMsg, setErrorMsg] = _react.useState('');
-    const [isPreviewAvailable, setIsPreviewAvailable] = _react.useState(false); // state to show preview only for images
-    const dropRef = _react.useRef();
     _react.useEffect(()=>{
         const getReviewsList = async ()=>{
             try {
@@ -49883,74 +49894,94 @@ const View = (props)=>{
         getReviewsList();
         console.log(filesList);
     }, []);
+    const downloadReview = async (id, path, mimetype)=>{
+        try {
+            const result = await _axiosDefault.default.get(`${_constants.API_URL}/file/download/${id}`, {
+                responseType: 'blob'
+            }).then(setLoading(false));
+            const split = path.split('/');
+            const filename = split[split.length - 1];
+            setErrorMsg('');
+            return download(result.data, filename, mimetype);
+        } catch (error) {
+            if (error.response && error.response.status === 400) setErrorMsg('Error while downloading file. Try again later');
+        }
+    };
     return(/*#__PURE__*/ _reactDefault.default.createElement("div", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 39
+            lineNumber: 50
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("h1", {
         id: "viewid",
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 40
+            lineNumber: 51
         },
         __self: undefined
     }, "View"), /*#__PURE__*/ _reactDefault.default.createElement("div", {
         className: "files-container",
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 41
+            lineNumber: 52
         },
         __self: undefined
-    }, /*#__PURE__*/ _reactDefault.default.createElement("table", {
+    }, errorMsg && /*#__PURE__*/ _reactDefault.default.createElement("p", {
+        className: "errorMsg",
+        __source: {
+            fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
+            lineNumber: 53
+        },
+        __self: undefined
+    }, errorMsg), /*#__PURE__*/ _reactDefault.default.createElement("table", {
         className: "files-table",
         id: "t01",
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 43
+            lineNumber: 55
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("thead", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 44
+            lineNumber: 56
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("tr", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 45
+            lineNumber: 57
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("th", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 46
+            lineNumber: 58
         },
         __self: undefined
     }, "Title"), /*#__PURE__*/ _reactDefault.default.createElement("th", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 47
+            lineNumber: 59
         },
         __self: undefined
     }, "Description"), /*#__PURE__*/ _reactDefault.default.createElement("th", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 48
+            lineNumber: 60
         },
         __self: undefined
     }, "Author"), /*#__PURE__*/ _reactDefault.default.createElement("th", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 49
+            lineNumber: 61
         },
         __self: undefined
     }, "Approval"))), /*#__PURE__*/ _reactDefault.default.createElement("tbody", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 52
+            lineNumber: 64
         },
         __self: undefined
     }, filesList.length > 0 ? filesList.map(({ _id , title , description , author , approval , file_path , file_mimetype  })=>{
@@ -49964,42 +49995,42 @@ const View = (props)=>{
             key: _id,
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-                lineNumber: 67
+                lineNumber: 79
             },
             __self: undefined
         }, /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-title",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-                lineNumber: 68
+                lineNumber: 80
             },
             __self: undefined
         }, title), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-description",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-                lineNumber: 69
+                lineNumber: 81
             },
             __self: undefined
         }, description), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-author",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-                lineNumber: 70
+                lineNumber: 82
             },
             __self: undefined
         }, author), /*#__PURE__*/ _reactDefault.default.createElement("td", {
             className: "file-approval",
             __source: {
                 fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-                lineNumber: 71
+                lineNumber: 83
             },
             __self: undefined
         }, app)));
     }) : /*#__PURE__*/ _reactDefault.default.createElement("tr", {
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 77
+            lineNumber: 89
         },
         __self: undefined
     }, /*#__PURE__*/ _reactDefault.default.createElement("td", {
@@ -50009,12 +50040,12 @@ const View = (props)=>{
         },
         __source: {
             fileName: "D:\\ConferenceNew\\frontend\\src\\components\\research\\view.js",
-            lineNumber: 78
+            lineNumber: 90
         },
         __self: undefined
     }, "No files found. Please add some.")))))));
 };
-_s(View, "ncnn1vmlkvQosq4uUZhpEuXD/sc=");
+_s(View, "bWuK74Imdf9ceNABcpqHjEj10z8=");
 _c = View;
 exports.default = View;
 var _c;
@@ -50390,7 +50421,7 @@ const Reviwer = ()=>{
     _react.useEffect(()=>{
         const getReviewsList = async ()=>{
             try {
-                const { data  } = await _axiosDefault.default.get(`${_constants.API_URL}/file/getAllFiles`);
+                const { data  } = await _axiosDefault.default.get(`${_constants.API_URL}/work/getAllFiles`);
                 setErrorMsg('');
                 setReviewsList(data);
             } catch (error) {
@@ -50401,7 +50432,7 @@ const Reviwer = ()=>{
     }, []);
     const downloadReview = async (id, path, mimetype)=>{
         try {
-            const result = await _axiosDefault.default.get(`${_constants.API_URL}/file/download/${id}`, {
+            const result = await _axiosDefault.default.get(`${_constants.API_URL}/work/download/${id}`, {
                 responseType: 'blob'
             });
             console.log("test");
@@ -50416,7 +50447,7 @@ const Reviwer = ()=>{
     const approvalStatus = async (id, status)=>{
         console.log("called");
         try {
-            const result = await _axiosDefault.default.patch(`${_constants.API_URL}/file/update/${id}`, {
+            const result = await _axiosDefault.default.patch(`${_constants.API_URL}/work/update/${id}`, {
                 "approval": status
             });
             setErrorMsg('');

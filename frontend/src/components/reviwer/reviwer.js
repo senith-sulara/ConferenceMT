@@ -65,55 +65,68 @@ const Reviwer = () => {
             <th>Description</th>
             <th>Author</th>
             <th>Download Review</th>
+            <th>Status</th>
             <th>Approval</th>
           </tr>
         </thead>
         <tbody>
           {filesList.length > 0 ? (
             filesList.map(
-              ({ _id, title, description,author, file_path, file_mimetype }) => (
-                <tr key={_id}>
-                  <td className="file-title">{title}</td>
-                  <td className="file-description">{description}</td>
-                  <td className="file-author">{author}</td>
-                  <td>
-                    <a
-                      href="#/"
-                      onClick={() =>
-                        downloadReview(_id, file_path, file_mimetype)
-                      }
-                    >
-                      Download
+              ({ _id, title, description, author, approval, file_path, file_mimetype }) => {
+                var app;
+                if (approval !== undefined) {
+
+                  if (approval) {
+                    app = "Approved";
+                  } else app = "Rejected"
+
+                } else app = "Pending"
+                return (
+                  <tr key={_id}>
+                    <td className="file-title">{title}</td>
+                    <td className="file-description">{description}</td>
+                    <td className="file-author">{author}</td>
+                    <td>
+                      <a
+                        href="#/"
+                        onClick={() =>
+                          downloadReview(_id, file_path, file_mimetype)
+                        }
+                      >
+                        Download
                     </a>
-                  </td>
-                  <td colSpan="2">
-                    <a
-                      href="#/"
-                      onClick={() =>
-                        approvalStatus(_id, true)
-                      }
-                    >
-                      Approve
+                    </td>
+                    <td className="file-approval">{app}</td>
+                    <td colSpan="2">
+                      <a
+                        href="#/"
+                        onClick={() =>
+                          approvalStatus(_id, true)
+                        }
+                      >
+                        Approve
                     </a>
-                    <a
-                      href="#/"
-                      onClick={() =>
-                        approvalStatus(_id, false)
-                      }
-                    >
-                      Decline
+                      <a
+                        href="#/"
+                        onClick={() =>
+                          approvalStatus(_id, false)
+                        }
+                      >
+                        Decline
                     </a>
-                  </td>
-                </tr>
-              )
+                    </td>
+                  </tr>
+                )
+              }
             )
           ) : (
-            <tr>
-              <td colSpan={3} style={{ fontWeight: '300' }}>
-                No files found. Please add some.
+              <tr>
+
+                <td colSpan={3} style={{ fontWeight: '300', width: "100%" }}>
+                  Loading...
               </td>
-            </tr>
-          )}
+              </tr>
+            )}
         </tbody>
       </table>
     </div>

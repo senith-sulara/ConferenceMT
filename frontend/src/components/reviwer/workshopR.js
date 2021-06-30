@@ -11,7 +11,7 @@ const Reviwer = () => {
   useEffect(() => {
     const getReviewsList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/file/getAllFiles`);
+        const { data } = await axios.get(`${API_URL}/work/getAllFiles`);
         setErrorMsg('');
         setReviewsList(data);
       } catch (error) {
@@ -25,7 +25,7 @@ const Reviwer = () => {
   const downloadReview = async (id, path, mimetype) => {
       
     try {
-      const result = await axios.get(`${API_URL}/file/download/${id}`, {
+      const result = await axios.get(`${API_URL}/work/download/${id}`, {
         responseType: 'blob'
       });
       console.log("test");
@@ -43,7 +43,7 @@ const Reviwer = () => {
   const approvalStatus = async (id, status) => {
       console.log("called");
     try {
-      const result = await axios.patch(`${API_URL}/file/update/${id}`,{"approval":status});
+      const result = await axios.patch(`${API_URL}/work/update/${id}`,{"approval":status});
       setErrorMsg('');
       console.log(result);
       return update(result.data);

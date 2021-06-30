@@ -6,17 +6,7 @@ import './view.css';
 
 const View = (props) => {
     const [filesList, setReviewsList] = useState([]);
-
-    const [file, setFile] = useState(null); // state for storing actual image
-  const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
-  const [state, setState] = useState({
-    title: '',
-    description: '',
-    author: ''
-  });
   const [errorMsg, setErrorMsg] = useState('');
-  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
-  const dropRef = useRef(); 
 
     useEffect(() => {
         const getReviewsList = async () => {
@@ -35,10 +25,32 @@ const View = (props) => {
     
         console.log(filesList);
       }, []);
+
+      const downloadReview = async (id, path, mimetype) => {
+
+    try {
+
+      const result = await axios.get(`${API_URL}/file/download/${id}`, {
+        responseType: 'blob'
+      }).then(
+        setLoading(false)
+      );
+
+      const split = path.split('/');
+      const filename = split[split.length - 1];
+      setErrorMsg('');
+      return download(result.data, filename, mimetype);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setErrorMsg('Error while downloading file. Try again later');
+      }
+    }
+  };
     return(
         <div>
             <h1 id="viewid">View</h1>
             <div className="files-container">
+            {errorMsg && <p className="errorMsg">{errorMsg}</p>}
 
         <table className="files-table" id="t01">
           <thead>
