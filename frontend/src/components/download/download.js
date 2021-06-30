@@ -44,6 +44,7 @@ const Downloads = () => {
   
   return (
     <div className="files-container">
+      <h1 id="viewid">Download Research Papers Hear</h1>
       {errorMsg && <p className="errorMsg">{errorMsg}</p>}
       <table className="files-table" id="t01">
         <thead>

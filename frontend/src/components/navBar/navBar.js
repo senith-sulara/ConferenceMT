@@ -1,47 +1,50 @@
 import React, { Component, useState } from 'react';
 import {MenuItem} from "./MenuItem.js";
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import './navBar.css';
+import {FiAlignRight,FiXCircle,FiChevronDown } from "react-icons/fi";
 import AuthOption from '../signin/AuthOption';
 import Dropdown from './Dropdown';
 import DropdownTwo from './DropdownTwo';
 // import {Button} from '../signin/AuthOption';
 
-class Navbar extends Component {
-  state = {clicked: false}
+// class Navbar extends Component {
+//   state = {clicked: false}
 
-    handleClick = () => {
-      this.setState({clicked: !this.state.clicked})
-    }
+//     handleClick = () => {
+//       this.setState({clicked: !this.state.clicked})
+//     }
 
-  render() {
-    return (
-        <nav className="NavItems">
-          <h1 className="navbar-logo">SLIITCon</h1>
-          <div className="menu-icon" onClick={this.handleClick}>
-            <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}>
+//   render() {
+//     return (
+//         <nav className="NavItems">
+//           <h1 className="navbar-logo">SLIITCon</h1>
+//           <div className="menu-icon" onClick={this.handleClick}>
+//             <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}>
 
-            </i>
-            </div>
-          <ul className={this.state.clicked ? 'nav-menu active': 'nav-menu'}>
-           {MenuItem.map((item, index) => {
-             return(
-               <li key={index}>
-                 <a className={item.mName} href={item.url}>
-                   {item.title}
-                 </a>
-               </li>
-             )
-           })}  
-          </ul>  
-          <AuthOption/>
-           {/* <Button>Sign In</Button> */}
-        </nav>
-    )
-  }
-}
+//             </i>
+//             </div>
+//           <ul className={this.state.clicked ? 'nav-menu active': 'nav-menu'}>
+//            {MenuItem.map((item, index) => {
+//              return(
+//                <li key={index}>
+//                  <a className={item.mName} href={item.url}>
+//                    {item.title}
+//                  </a>
+//                </li>
+//              )
+//            })}  
+//           </ul>  
+//           <AuthOption/>
+//            {/* <Button>Sign In</Button> */}
+//         </nav>
+//     )
+//   }
+// }
 
-export default Navbar;
+// export default Navbar;
+
+////////////////////////////////////////////////////////////////////////
 
 // function Navbar() {
 //   const [click, setClick] = useState(false);
@@ -165,3 +168,74 @@ export default Navbar;
 // }
 
 // export default Navbar;
+
+//////////////////////////////////////////////////////////////////////////////
+
+const Navbar = () => {
+  const [isMenu, setisMenu] = useState(false);
+  const [isResponsiveclose, setResponsiveclose] = useState(false);
+  const toggleClass = () => {
+    setisMenu(isMenu === false ? true : false);
+    setResponsiveclose(isResponsiveclose === false ? true : false);
+};
+  let boxClass = ["main-menu menu-right menuq1"];
+  if(isMenu) {
+      boxClass.push('menuq2');
+  }else{
+      boxClass.push('');
+  }
+  const [isMenuSubMenu, setMenuSubMenu] = useState(false);
+  const toggleSubmenu = () => {
+    setMenuSubMenu(isMenuSubMenu === false ? true : false);
+  };
+  let boxClassSubMenu = ["sub__menus"];
+  if(isMenuSubMenu) {
+      boxClassSubMenu.push('sub__menus__Active');
+  }else {
+      boxClassSubMenu.push('');
+  }
+  return (
+  <header className="header__middle">
+      <div className="contner">
+          <div className="row">
+              <div className="header__middle__menus">
+                  <nav className="main-nav " >
+                  <h1 className="navbar-logo">SLIITCon</h1>
+                  {/* Responsive Menu Button */}
+                  {isResponsiveclose === true ? <> 
+                      <span className="menubar__button" style={{ display: 'none' }} onClick={toggleClass} > <FiXCircle />   </span>
+                  </> : <> 
+                      <span className="menubar__button" style={{ display: 'none' }} onClick={toggleClass} > <FiAlignRight />   </span>
+                  </>}
+                  <ul className={boxClass.join(' ')}>
+                      <li  className="menu-item" >
+                          <NavLink exact activeClassName='is-active' onClick={toggleClass} to={`/`}> Home </NavLink> 
+                      </li>
+                      <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/presentations`}> Presentations </NavLink> </li>
+                      <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/workshops`}> Workshops </NavLink> </li>
+                      <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Researches <FiChevronDown /> </Link>
+                          <ul className={boxClassSubMenu.join(' ')} > 
+                              <li> <NavLink onClick={toggleClass} activeClassName='is-active'  to={`/researches`}> Add Item </NavLink> </li>
+                              <li><NavLink onClick={toggleClass} activeClassName='is-active' to={`/view`}> View </NavLink> </li>
+                          </ul>
+                      </li>
+                      <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/downloads`}> Downloads </NavLink> </li>
+
+                      <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Reviwers <FiChevronDown /> </Link>
+                          <ul className={boxClassSubMenu.join(' ')} > 
+                              <li> <NavLink onClick={toggleClass} activeClassName='is-active'  to={`/Reviwers`}> Researche Review </NavLink> </li>
+                              <li><NavLink onClick={toggleClass} activeClassName='is-active' to={`/work`}> Workshop Review </NavLink> </li>
+                          </ul>
+                      </li>
+
+                      <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/Contact`}> Contact </NavLink> </li>
+                  </ul>
+                  <AuthOption/>
+                  </nav>     
+              </div>   
+          </div>
+    </div>
+  </header>
+  )
+}
+export default Navbar

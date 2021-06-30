@@ -15,6 +15,7 @@ import userContext from './src/context/userContext';
 import Reviwers from './src/components/reviwer/reviwer.js';
 import View from './src/components/research/view';
 import Edit from './src/components/editor/editor.js';
+import WorkRev from './src/components/reviwer/workshopR.js'
 
 export default function App() { 
     const [userData, setUserData] = useState({
@@ -58,11 +59,13 @@ export default function App() {
             <Route path="/" component={Home} exact />
             <Route path="/presentations" exact component={Presentations} />
             <Route path="/workshops" exact component={Workshops} />
-            {/* <Route path="/view" exact component={View} /> */}
+            <Route path="/view" exact component={View} />
             <Route path="/researches" exact component={Researches} />
             <Route path="/downloads" exact component={Downloads} />
             <Route path="/reviwers" exact component={Reviwers} />
             <Route path="/contact" exact component={Contact} />
+            {/* <Route path="/contact" exact component={Contact} /> */}
+            <Route path="/work" exact component={WorkRev} />
             <Route path="/edit" exact component={Edit} />
             <Route path="/signup" exact component={Signup}/>
             <Route path="/login" exact component={SignIn} />

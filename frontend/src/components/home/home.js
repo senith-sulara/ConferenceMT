@@ -30,7 +30,7 @@ const Home = () => {
 
 
     return (
-      <div className="container">
+      <div className="contaer">
         <h1 className="head">Welcome to SLIITCon 2021</h1>
         <h2 className="ver">Virtual Conference</h2>
 
@@ -64,7 +64,6 @@ const Home = () => {
                 <div key={_id} >
                   <div className="tt">
                   <label id="dateL">Upcoming Event {title}</label>
-                  {/* <h4 id="dateH">{date}</h4> */}
                   <label id="dateL">Date</label>
                   <h4 id="dateH">{date}</h4>
                   <label id="timeL">Time</label>
@@ -76,7 +75,7 @@ const Home = () => {
                                 About Events
                             </button>
                   </div>
-                  <div className="desc">
+                  <div className="desc" id="desci">
                    <lable id="decL" ref={aboutSection}>About Event</lable>
                   <h6 className="file-description" id="descId">{description}</h6>
                   </div>
