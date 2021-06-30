@@ -31,17 +31,9 @@ export class Dashboard extends Component {
                         <div className="data">
                             <h3 className="h1 text-left mb-4">Total Research Papers</h3>
                             <h4>
-                                {/*<strong>{this.state.tourListStatus ?this.state.tourList.length :*/}
-                                {/*    ''}</strong>*/}
                             </h4>
                         </div>
                     </div>
-                    {/*<MDBCardBody>*/}
-                    {/*<div className="progress">*/}
-                    {/*<div aria-valuemax="100" aria-valuemin="0" aria-valuenow={this.state.tourListStatus ?this.state.tourList.length : ''} className="progress-bar bg-primary" role="progressbar"*/}
-                    {/*style={{width: this.state.tourListStatus ?this.state.tourList.length : ''}}></div>*/}
-                    {/*</div>*/}
-                    {/*</MDBCardBody>*/}
                 </MDBCard>
                 <br/>
                 <br/>
@@ -56,9 +48,6 @@ export class Dashboard extends Component {
                         <div className="data">
                             <h3 className="h1 text-left mb-4">Total Workshops</h3>
                             <h4>
-                                {/*<strong>{this.state.bookedTourListStatus ?this.state.bookedTourList.length :*/}
-                                {/*    ''}</strong>*/}
-
                             </h4>
                         </div>
                     </div>
