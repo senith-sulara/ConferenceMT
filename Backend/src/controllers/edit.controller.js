@@ -1,82 +1,96 @@
-const Page = require('../models/edit.model');
+const path = require('path');
+const express = require('express');
+const multer = require('multer');
+const Edit = require('../models/edit.model');
+const Router = express.Router();
 
-const createPage = async (req, res) => {
-  if (req.body) {
-    const page = new Page(req.body);
-    await page.save()
-    .then(data => {
-      res.status(200).send({ data: data });
-    })
-    .catch(error => {
-      res.status(500).send({ error: error.message });
-    });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, './files');
+    },
+    filename(req, file, cb) {
+      cb(null, `${new Date().getTime()}_${file.originalname}`);
+    }
+  }),
+  limits: {
+    fileSize: 5000000 // max file size 5MB = 5000000 bytes
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
+      return cb(
+        new Error(
+          'only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'
+        )
+      );
+    }
+    cb(undefined, true); // continue with upload
   }
-}
+});
 
-const updatePage = async (req, res, next) => {
-  await Page.findByIdAndUpdate(req.params.id, {$set: req.body}, (error, data) => {
-    if (error) {
-      return next(error);
-      console.log(error);
-    } else {
-      res.json(data)
-      console.log('Page Details updated successfully !')
+Router.post(
+  '/upload',
+  upload.single('file'),
+  async (req, res) => {
+    try {
+      const { title, description, date, time } = req.body;
+      const { path, mimetype } = req.file;
+      const edit = new Edit({
+        title,
+        description,
+        date,
+        time,
+        file_path: path,
+        file_mimetype: mimetype
+      });
+      await edit.save();
+      res.send('Page details uploaded successfully.');
+    } catch (error) {
+      res.status(400).send('Error while uploading page. Try again later.');
     }
-    
-})
-}
-
-const deletePage = async(req, res, next) => {
-    await Page.findByIdAndRemove(req.params.id, (error, data) => {
+  },
+  (error, req, res, next) => {
     if (error) {
-      res.status(500).send({ error: error.message });
-      return next(error);
-    } else {
-      res.status(200).json({
-        msg: data
-      })
+      res.status(500).send(error.message);
     }
-})
-}
+  }
+);
 
-const getAllPages = async (req, res) => {
-  await Page.find({}).populate('pages', 'name title description date time')
-  .then(data => {
-    res.status(200).send({ data: data });
+
+
+Router.patch('/update/:id', (req, res) => {
+  Edit.findByIdAndUpdate(req.params.id, req.body, {new: true}).then((blog) => {
+      if (!blog) {
+          return res.status(404).send();
+      }
+      res.send(blog);
+  }).catch((error) => {
+      res.status(500).send(error);
   })
-  .catch(error => {
-    res.status(500).send({ error: error.message });
-  });
-}
-// const getDT = async (req, res) => {
-//   await Page.findOne({}).sort({'_id':-1}).limit(1).populate('pages', 'date time')
-//   .then(data => {
-//     res.status(200).send({ data: data });
-//   })
-//   .catch(error => {
-//     res.status(500).send({ error: error.message });
-//   });
-// }
+})
 
-const getConForPage = async (req, res) => {
-  if (req.params && req.params.id) {
-    await Page.findById(req.params.id)
-    .populate('pages', 'name title description date time')
-    .then(data => {
-      res.status(200).send({ pages: data.pages });
-    })
-    .catch(error => {
-      res.status(500).send({ error: error.message });
-    });
+Router.get('/getAllFiles', async (req, res) => {
+  try {
+    const edits = await Edit.find({});
+    const sortedByCreationDate = edits.sort(
+      (a, b) => b.createdAt - a.createdAt
+    );
+    res.send(sortedByCreationDate);
+  } catch (error) {
+    res.status(400).send('Error while getting list of files. Try again later.');
   }
-}
+});
 
+Router.get('/download/:id', async (req, res) => {
+  try {
+    const edit = await Edit.findById(req.params.id);
+    res.set({
+      'Content-Type': edit.file_mimetype
+    });
+    res.sendFile(path.join(__dirname, '..', '..', edit.file_path));
+  } catch (error) {
+    res.status(400).send('Error while downloading file. Try again later.');
+  }
+});
 
-module.exports = {
-  createPage,
-  updatePage,
-  deletePage,
-  getAllPages,
-  getConForPage,
-  //getDT,
-};
+module.exports = Router;

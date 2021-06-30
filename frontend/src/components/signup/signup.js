@@ -17,11 +17,6 @@ export default function SignUp() {
   const {setUserData} = useContext(userContext);
   const history = useHistory();
 
-  const usersType = [
-    {label: "Attendee", value:1},
-    {label: "Researcher", value:2},
-    {label: "Reviwer", value:3},
-  ];
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -47,10 +42,6 @@ export default function SignUp() {
   }
   };
 
-  const [result,dvalue]=useState(usersType.label);
-  const ddlHandler = e => {
-    dvalue(e.label);
-  }
 
     return (
       <div className="container1">
@@ -70,23 +61,14 @@ export default function SignUp() {
           </div>
 
           <div className="nm-1">
-            <label htmlFor="type" className="lbl-name">Choose Type:</label>
-            <input 
-              type="text" 
-              id="type"
-              onChange={(e) => setType(e.target.value)}
-            />
+              <label htmlFor="type" className="lbl-name">Choose Type:</label>
+              <select onChange={(e) => setType(e.target.value)}>
+              <option disabled selected="true">-- Choose User Type --</option>
+                <option value="Attendee">Attendee</option>
+                <option value="Researcher">Researcher</option>
+                <option value="Reviwer">Reviwer</option>
+              </select>
           </div>
-
-          {/* <div className="nm-1">
-          <label htmlFor="type">Choose Type:</label>
-             <Select 
-              className="type" 
-              id="type"
-              options={usersType} 
-              onChange={ddlHandler}>
-            </Select>
-            </div> */}
 
           <div className="nm-1">
             <label htmlFor="type" className="lbl-type">Email:</label>

@@ -31,7 +31,7 @@ export const MenuItem = [
     },
     {
         title: 'Contact',
-        url: '/contact',
+        url: '/edit',
         mName: 'nav-links'
     },
     {

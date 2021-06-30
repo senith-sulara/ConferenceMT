@@ -12,7 +12,9 @@ import Contact from './src/components/contact/contact.js';
 import SignIn from './src/components/signin/signin.js';
 import Signup from './src/components/signup/signup.js';
 import userContext from './src/context/userContext';
-import Reviwers from './src/components/reviwer/reviwer.js'
+import Reviwers from './src/components/reviwer/reviwer.js';
+import View from './src/components/research/view';
+import Edit from './src/components/editor/editor.js';
 
 export default function App() { 
     const [userData, setUserData] = useState({
@@ -54,14 +56,16 @@ export default function App() {
         <section>
           <Switch>
             <Route path="/" component={Home} exact />
-            <Route path="/presentations" component={Presentations} />
-            <Route path="/workshops" component={Workshops} />
-            <Route path="/researches" component={Researches} />
-            <Route path="/downloads" component={Downloads} />
-            <Route path="/reviwers" component={Reviwers} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/signup" component={Signup}/>
-            <Route path="/login" component={SignIn} />
+            <Route path="/presentations" exact component={Presentations} />
+            <Route path="/workshops" exact component={Workshops} />
+            {/* <Route path="/view" exact component={View} /> */}
+            <Route path="/researches" exact component={Researches} />
+            <Route path="/downloads" exact component={Downloads} />
+            <Route path="/reviwers" exact component={Reviwers} />
+            <Route path="/contact" exact component={Contact} />
+            <Route path="/edit" exact component={Edit} />
+            <Route path="/signup" exact component={Signup}/>
+            <Route path="/login" exact component={SignIn} />
             {/* <Route path="/:id" component={Subjects} />
             <Route path="/" component={Courses} exact /> */}
           </Switch>

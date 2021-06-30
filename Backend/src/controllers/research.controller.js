@@ -14,7 +14,7 @@ const upload = multer({
     }
   }),
   limits: {
-    fileSize: 1000000 // max file size 1MB = 1000000 bytes
+    fileSize: 10000000 // max file size 10MB = 10000000 bytes
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
@@ -55,6 +55,19 @@ Router.post(
   }
 );
 
+
+
+Router.patch('/update/:id', (req, res) => {
+  File.findByIdAndUpdate(req.params.id, req.body, {new: true}).then((blog) => {
+      if (!blog) {
+          return res.status(404).send();
+      }
+      res.send(blog);
+  }).catch((error) => {
+      res.status(500).send(error);
+  })
+})
+
 Router.get('/getAllFiles', async (req, res) => {
   try {
     const files = await File.find({});
@@ -73,7 +86,7 @@ Router.get('/download/:id', async (req, res) => {
     res.set({
       'Content-Type': file.file_mimetype
     });
-    res.sendFile(path.join(__dirname, '..', file.file_path));
+    res.sendFile(path.join(__dirname, '..', '..', file.file_path));
   } catch (error) {
     res.status(400).send('Error while downloading file. Try again later.');
   }

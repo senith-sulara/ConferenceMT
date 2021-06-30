@@ -1,6 +1,6 @@
 import React, { Component, useState, useRef} from 'react';
 import axios from 'axios';
-import './research.css';
+import './edit.css';
 import ErrorNotice from '../misc/ErrorNotice';
 import Dropzone from 'react-dropzone';
 
@@ -10,7 +10,8 @@ const Researches = (props) => {
   const [state, setState] = useState({
     title: '',
     description: '',
-    author: ''
+    date: '',
+    time:''
   });
   const [errorMsg, setErrorMsg] = useState('');
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
@@ -49,17 +50,18 @@ const Researches = (props) => {
     event.preventDefault();
 
     try {
-      const { title, description, author } = state;
-      if (title.trim() !== '' && description.trim() !== '' && author.trim() !== '') {
+      const { title, description, date, time } = state;
+      if (title.trim() !== '' && description.trim() !== '' && date.trim() !== '' && time.trim() !== '') {
         if (file) {
           const formData = new FormData();
           formData.append('file', file);
           formData.append('title', title);
           formData.append('description', description);
-          formData.append('author', author);
+          formData.append('date', date);
+          formData.append('time', time);
 
           setErrorMsg('');
-          await axios.post('http://localhost:8085/file/upload', formData, {
+          await axios.post('http://localhost:8085/edit/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -78,7 +80,7 @@ const Researches = (props) => {
     return (
       <div className="con5">
         <div className="cn21">
-            <h15>Insert Research Data</h15>
+            <h15>Edit Page</h15>
         </div>
         <form onSubmit={handleOnSubmit} id="frm-resarch">
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
@@ -105,27 +107,27 @@ const Researches = (props) => {
             </textarea>
           </div>
           <div className="mb-3">
-            <label htmlFor="author" className="form-label">Author</label>
+            <label htmlFor="date" className="form-label">Date</label>
             <input 
-              type="text" 
+              type="date" 
               className="form-control" 
-              id="author" 
-              name="author" 
-              value={state.author || ''}
+              id="date" 
+              name="date" 
+              value={state.date || ''}
               onChange={handleInputChange}
             />
           </div>
-          {/* <div className="mb-3">
-            <label htmlFor="author" className="form-label">Select a file : </label>
+          <div className="mb-3">
+            <label htmlFor="time" className="form-label">Time</label>
             <input 
-              type="file" 
-              className="files" 
-              id="file" 
-              name="file" 
-              value={this.state.file_path}
+              type="time" 
+              className="form-control" 
+              id="time" 
+              name="time" 
+              value={state.time || ''}
               onChange={handleInputChange}
             />
-          </div> */}
+          </div>
           <div className="upload-section">
           <Dropzone 
             onDrop={onDrop}

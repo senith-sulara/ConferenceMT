@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const editAPI = require('./src/api/edit.api');
+// const editAPI = require('./src/api/edit.api');
 const userAPI = require('./src/api/user.api');
 const userTypeAPI = require('./src/api/usertype.api');
 const reviweAPI = require('./src/api/reviwer.api');
 const fileRoute = require('./src/controllers/research.controller')
+const editRoute = require('./src/controllers/edit.controller')
 
 dotenv.config();
 const app = express();
@@ -33,11 +34,12 @@ mongoose.connection.once('open', () => {
   console.log('Database Synced');
 });
 
-app.use('/edit', editAPI());
+// app.use('/edit', editAPI());
 app.use('/user', userAPI());
 app.use('/type', userTypeAPI());
 app.use('/reviwe', reviweAPI());
 app.use('/file', fileRoute);
+app.use('/edit', editRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is up and running on PORT ${PORT}`);
