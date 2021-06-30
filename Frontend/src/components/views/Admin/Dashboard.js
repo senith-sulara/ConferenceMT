@@ -16,10 +16,7 @@ export class Dashboard extends Component {
             bookedTourListStatus: false,
             bookedTourCount :0
         }
-        // this.getAllTours = this.getAllTours.bind(this);
-        // this.getAllBookedTours = this.getAllBookedTours.bind(this);
-        // this.getAllTours();
-        // this.getAllBookedTours();
+
     }
 
     render() {
