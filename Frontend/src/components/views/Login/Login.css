@@ -1,0 +1,26 @@
+.buttonSign{
+    border-radius: 10px !important;
+}
+
+.loginContainer{
+    border-radius: 30px !important;
+
+}
+
+#apppage{
+    overflow-y:hidden;
+    position: center;
+}
+
+#apppage .view {
+    background-image: url('./background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    left: 0px !important;
+}
+
+#apppage h6 {
+    line-height: 1.7;
+}
