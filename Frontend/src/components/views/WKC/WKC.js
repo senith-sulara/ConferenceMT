@@ -57,11 +57,6 @@ export class WKC extends Component {
         })
     }
 
-    // onChangeWorkShop(event) {
-    //     this.setState({ workShop: event.target.value }, () =>
-    //         console.log(this.state.workShop));
-    // }
-
     onChangeDate(event) {
         console.log(event.target.value)
         this.setState({
