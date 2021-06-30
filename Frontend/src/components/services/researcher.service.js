@@ -21,13 +21,5 @@ export const findallAcceptedRP = (userId) => {
         })
 };
 
-export const findallBookedTours = () => {
-    return axios.get(constants.backend_url + 'api/research/getAll')
-        .then(res => {
-            console.log(res);
-            return res;
-        }).catch(function (error) {
-            return error;
-        })
-};
+
 
